@@ -1,0 +1,206 @@
+/* Basic Reset and Setup */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Cosmic Background Base Color */
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    overflow: hidden;
+}
+
+/* Screen Management */
+.screen {
+    width: 100%;
+    max-width: 500px; 
+    /* Semi-transparent dark background for screens */
+    background: rgba(10, 10, 30, 0.9); 
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); /* Neon glow */
+    border-radius: 10px;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+    position: absolute; 
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    visibility: hidden;
+    color: #00ffff; /* Neon text color */
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+}
+
+/* --- SNAKE GAME SPECIFIC STYLING --- */
+
+#game-screen h1 {
+    color: #ff00ff; /* Bright Pink/Magenta */
+    font-size: 1.8em;
+    text-shadow: 0 0 5px #ff00ff;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr); 
+    grid-template-rows: repeat(20, 1fr);
+    width: 400px;
+    height: 400px;
+    margin: 20px auto;
+    border: 3px solid #00ffff; /* Neon Cyan border */
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.snake {
+    background: linear-gradient(45deg, #00ff00, #00ffff); /* Green-Cyan gradient */
+    border: 1px solid #00ff00;
+}
+
+.food {
+    background: #ff00ff; /* Magenta food */
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ff00ff;
+}
+
+#score-display {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #ff00ff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 3px #ff00ff;
+}
+
+#start-button, #next-button {
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+    color: #1a1a2e; /* Dark text for contrast */
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 15px;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+#start-button:hover, #next-button:hover {
+    box-shadow: 0 0 15px #ff00ff, 0 0 15px #00ffff;
+}
+
+/* ---------------------------------------------------- */
+/* METEOR SHOWER ANIMATION */
+/* ---------------------------------------------------- */
+#meteor-shower-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Below the card */
+    overflow: hidden;
+}
+
+.meteor {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 50%;
+    /* Adds the glowing tail effect */
+    box-shadow: 0 0 5px #00ffff, 0 0 15px #ff00ff; 
+    transform: rotate(215deg);
+    animation: meteor-fall 8s linear infinite;
+}
+
+@keyframes meteor-fall {
+    0% {
+        transform: rotate(215deg) translateX(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: rotate(215deg) translateX(-1500px);
+        opacity: 0;
+    }
+}
+
+
+/* ---------------------------------------------------- */
+/* BIRTHDAY SCREEN (COSMIC THEME) */
+/* ---------------------------------------------------- */
+#birthday-screen {
+    background: none; /* Let the body's animated gradient show through */
+    max-width: none;
+    padding: 0;
+    position: fixed; 
+}
+
+.naruto-background {
+    /* REMOVED: No longer needed, as #meteor-shower-container is the main effect */
+    display: none; 
+}
+
+.birthday-card {
+    border: 5px solid #00ffff; 
+    background: rgba(10, 10, 30, 0.95); /* Darker semi-transparent card */
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), 0 0 20px rgba(255, 0, 255, 0.4);
+    z-index: 10;
+}
+
+.card-header {
+    color: #ff00ff; /* Magenta Header */
+    text-shadow: 0 0 5px #ff00ff;
+    margin-bottom: 20px;
+}
+
+/* Video/Image Container Styling remains the same, but colors pop more */
+.video-container {
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.image-foreground {
+    border: 3px solid #ff00ff; /* Magenta border */
+}
+
+.wish-text {
+    color: #e0f7fa; /* Light text for readability */
+    font-style: italic;
+    margin: 20px 0;
+    line-height: 1.8;
+}
+
+.signature {
+    font-weight: bold;
+    color: #00ffff; /* Cyan signature */
+    margin-top: 30px;
+}
+
+/* Confetti now styled like stars/dust */
+.confetti {
+    background: #ffffff;
+    box-shadow: 0 0 3px #fff;
+    z-index: 15; 
+}
+
+.confetti:nth-child(2) { background: #ff00ff; } 
+.confetti:nth-child(3) { background: #00ffff; } 
+
+/* Keyframe Animations */
+@keyframes swirl { /* Kept for compatibility, though not used now */
+    0% { transform: rotate(0deg); } 
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fall {
+    0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes image-fade {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}

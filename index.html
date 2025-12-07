@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Mission: Surprise for Sahil!</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="generateMeteors()">
+
+    <div id="game-screen" class="screen active">
+        <h1>ASTEROID SNAKE MISSION</h1>
+        <p>Sahil, navigate the cosmos and reach Score 5 to save the galaxy!</p>
+        
+        <div id="score-display">Score: 0</div>
+        
+        <div id="game-board">
+            </div>
+        
+        <button id="start-button">Start Mission (Use Arrow Keys/WASD)</button>
+        <p id="message-area" style="color: #00ffff; font-weight: bold; margin-top: 10px;">Reach Score 5 to WIN!</p>
+        
+        <button id="next-button" style="display:none;" onclick="showBirthdayNote()">Reveal Secret Scroll!</button>
+    </div>
+
+    <div id="birthday-screen" class="screen">
+        <div id="meteor-shower-container">
+            </div> 
+        
+        <div class="birthday-card">
+            <h1 class="card-header">HAPPY COSMIC BIRTHDAY, SAHIL! 🚀</h1>
+            
+            <div class="video-container">
+                <video autoplay muted loop id="video-background">
+                    </video>
+                
+                <div class="image-foreground" style="background-image: url('your_friends_image.jpg');"></div>
+            </div>
+            
+            <p class="wish-text">
+                To the star captain, Sahil! You've conquered every field and proven your merit. May your journey around the next sun be the most epic adventure yet. You're a true cosmic legend!
+
+             balle biggo billeya da ke krege bagge bagge billea da ke krege.
+
+            </p>
+            
+            <p class="signature">- From the Admiral, Rawat Jiii</p>
+            
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
