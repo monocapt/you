@@ -1,40 +1,47 @@
 // --- Game Configuration ---
-const BOARD_SIZE = 20; 
-const GAME_SPEED = 200; 
-const WIN_SCORE = 5; 
-const NUM_METEORS = 30; // Number of meteors to generate
-
+const BOARD_SIZE = 20; // 20x20 grid
+const GAME_SPEED = 200; // milliseconds per move
+const WIN_SCORE = 5; // Sahil needs to eat 5 food items to win
 const board = document.getElementById('game-board');
 const scoreDisplay = document.getElementById('score-display');
 const startButton = document.getElementById('start-button');
 const messageArea = document.getElementById('message-area');
 const nextButton = document.getElementById('next-button');
-const meteorContainer = document.getElementById('meteor-shower-container');
 
 // --- Game State ---
 let snake = [{ x: 10, y: 10 }]; 
 let food = {};
-let dx = 1; 
-let dy = 0; 
+let dx = 1; // Direction x (starts moving right)
+let dy = 0; // Direction y
 let score = 0;
 let gameInterval;
 let isGameOver = false;
 
-// --- Background Animation Function ---
+// --- Touch State for Swipe Detection ---
+let touchStartX = 0;
+let touchStartY = 0;
+const SWIPE_THRESHOLD = 30; // Minimum pixel difference to register a swipe
+
+// --- Birthday Screen Function ---
+function showBirthdayNote() {
+    document.getElementById('game-screen').classList.remove('active');
+    document.getElementById('birthday-screen').classList.add('active'); 
+}
+
+// --- Background Animation Function (from previous steps) ---
 function generateMeteors() {
+    const meteorContainer = document.getElementById('meteor-shower-container');
     if (!meteorContainer) return;
+
+    const NUM_METEORS = 30;
 
     for (let i = 0; i < NUM_METEORS; i++) {
         const meteor = document.createElement('div');
         meteor.classList.add('meteor');
-
-        // Random position for meteors
-        const startX = Math.random() * 100 + 100; // Start off-screen right
-        const startY = Math.random() * 100 + 10;  // Start near the top
-        
-        // Randomize speed and delay for a natural shower look
-        const duration = Math.random() * 5 + 3; // 3s to 8s duration
-        const delay = Math.random() * 6; // 0s to 6s delay
+        const startX = Math.random() * 100 + 100;
+        const startY = Math.random() * 100 + 10; 
+        const duration = Math.random() * 5 + 3;
+        const delay = Math.random() * 6;
 
         meteor.style.top = `${startY}vh`;
         meteor.style.left = `${startX}vw`;
@@ -43,12 +50,6 @@ function generateMeteors() {
 
         meteorContainer.appendChild(meteor);
     }
-}
-
-// --- Birthday Screen Function ---
-function showBirthdayNote() {
-    document.getElementById('game-screen').classList.remove('active');
-    document.getElementById('birthday-screen').classList.add('active'); 
 }
 
 // --- Core Game Logic ---
@@ -152,30 +153,85 @@ function winGame() {
     nextButton.style.display = 'block';
 }
 
+// --- Direction Update Function ---
+// Handles both key presses and swipes
+function changeDirection(newDx, newDy) {
+    // Prevent snake from reversing instantly
+    if (Math.abs(newDx) === Math.abs(dx) && Math.abs(newDy) === Math.abs(dy)) return;
+    
+    // Only update if not reversing
+    if (!(dx === -newDx || dy === -newDy)) {
+        dx = newDx;
+        dy = newDy;
+    }
+}
+
+
 // --- Event Listeners for Controls ---
+
 startButton.addEventListener('click', startGame);
 
+// 1. Desktop Controls (WASD/Arrows)
 document.addEventListener('keydown', e => {
     switch (e.key) {
         case 'ArrowUp':
         case 'w':
-            if (dy !== 1) { dx = 0; dy = -1; }
+            changeDirection(0, -1);
             break;
         case 'ArrowDown':
         case 's':
-            if (dy !== -1) { dx = 0; dy = 1; }
+            changeDirection(0, 1);
             break;
         case 'ArrowLeft':
         case 'a':
-            if (dx !== 1) { dx = -1; dy = 0; }
+            changeDirection(-1, 0);
             break;
         case 'ArrowRight':
         case 'd':
-            if (dx !== -1) { dx = 1; dy = 0; }
+            changeDirection(1, 0);
             break;
     }
 });
 
+
+// 2. Mobile Touch/Swipe Controls
+board.addEventListener('touchstart', e => {
+    // Record starting position of the touch
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+});
+
+board.addEventListener('touchend', e => {
+    // Check if the game is active before processing swipe
+    if (isGameOver || startButton.style.display !== 'none') return;
+    
+    // Get final touch position
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Determine if the movement was primarily horizontal or vertical
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        // Horizontal swipe
+        if (deltaX > 0) {
+            changeDirection(1, 0); // Swipe Right
+        } else {
+            changeDirection(-1, 0); // Swipe Left
+        }
+    } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > SWIPE_THRESHOLD) {
+        // Vertical swipe
+        if (deltaY > 0) {
+            changeDirection(0, 1); // Swipe Down
+        } else {
+            changeDirection(0, -1); // Swipe Up
+        }
+    }
+});
+
+
 // --- Initial Setup ---
-// The generateMeteors function is called automatically via the <body> tag's 'onload' event.
+// Call meteor generation when the script runs (which is after the body loads)
+generateMeteors();
 startButton.style.display = 'block';
